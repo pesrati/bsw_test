@@ -6,12 +6,13 @@ from fastapi import FastAPI, HTTPException, status
 
 from app.bet_maker.dao import BetsDAO
 from app.bet_maker.schemas import SBets
+from app.line_provider.dao import EventsDAO
 
-app = FastAPI()
+app = FastAPI(title="Bet Maker Service", version="1.0", description="This is a bet maker service")
 
 
 @app.get("/actual_events")
-async def get_events_played() -> list:
+async def get_actual_events() -> list:
     """
     Retrieves a list of events that are currently being played.
 
@@ -26,6 +27,7 @@ async def get_events_played() -> list:
             detail="Failed to get events from line_provider service",
         )
     data = response.json()
+    print(data,time.time())
     events = (x for x in data if x["deadline"] > time.time())
     return events
 
@@ -44,8 +46,8 @@ async def create_bet(bet_data: SBets) -> dict:
     Raises:
         HTTPException: If the event specified in the bet data is not found.
     """
-    existing_event = await BetsDAO.find_one_or_none(id=bet_data.event_id)
-    if not existing_event:
+    existing_event = await EventsDAO.find_one_or_none(id=bet_data.event_id)
+    if existing_event is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
         )

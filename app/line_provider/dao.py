@@ -11,6 +11,6 @@ class EventsDAO(BaseDAO):
     @classmethod
     async def update(cls, **data):
         async with async_session_maker() as session:
-            query = update(cls.model).values(**data)
+            query = update(cls.model).values(**data).where(cls.model.id == data["id"])
             await session.execute(query)
             await session.commit()

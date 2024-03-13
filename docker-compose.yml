@@ -1,0 +1,34 @@
+version: 'version 1.0.0'
+services:
+  db:
+    image: postgres:16
+    env_file:
+      - .env-non-dev
+    ports:
+      - "5432:5432"
+
+  bsw_app_lin:
+    image: bsw_app_lin
+    build:
+      context: .
+    container_name: bsw_app_lin
+    env_file:
+      - .env-non-dev
+    depends_on:
+      - db
+    command: ['/bsw/docker/app1.sh']
+    ports:
+      - 8000:8000
+  
+  bsw_app_bet:
+    image: bsw_app_bet
+    build:
+      context: .
+    container_name: bsw_app_bet
+    env_file:
+      - .env-non-dev
+    depends_on:
+      - db
+    command: ['/bsw/docker/app2.sh']
+    ports:
+      - 8001:8001

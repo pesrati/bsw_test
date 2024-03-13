@@ -1,7 +1,7 @@
 import time
 
 import uvicorn
-from fastapi import FastAPI, HTTPException, Path, status
+from fastapi import FastAPI, HTTPException,  status
 
 from app.line_provider.dao import EventsDAO
 from app.line_provider.schemas import SEvent
@@ -29,7 +29,7 @@ async def create_event(event_data: SEvent) -> dict:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="Event already exists"
         )
-    event_data.deadline = time.time()
+    event_data.deadline += time.time()
     await EventsDAO.add(**event_data.model_dump())
     return {"message": "Event successfully created"}
 
@@ -67,8 +67,8 @@ async def get_events() -> list[SEvent]:
     return await EventsDAO.find_all()
 
 
-@app.patch("/event/{event_id}")
-async def update_event(event_id: int, status: str) -> dict:
+@app.patch("/event/update/{event_id}")
+async def update_event(id: int, state: str) -> dict:
     """
     Update the status of an event.
 
@@ -82,12 +82,12 @@ async def update_event(event_id: int, status: str) -> dict:
     Raises:
         HTTPException: If the event with the specified ID is not found.
     """
-    existing_event = await EventsDAO.find_one_or_none(id=event_id)
-    if not existing_event:
+    existing_event = await EventsDAO.find_one_or_none(id=id)
+    if  existing_event is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
         )
-    await EventsDAO.update(id=event_id, state=status)
+    await EventsDAO.update(id=id, state=state)
     return {"message": "Event successfully updated"}
 
 

@@ -1,0 +1,12 @@
+[
+    {
+        "coefficient": 1.14,
+        "deadline": 180236378,
+        "state": "N"
+    },
+    {
+        "coefficient": 1.34,
+        "deadline": 1700236378,
+        "state": "L"
+    }
+]

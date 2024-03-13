@@ -1,0 +1,9 @@
+[
+    {
+        "event_id": 1,
+        "amount": 200
+    },
+    {
+        "event_id": 2,
+        "amount": 300}
+]

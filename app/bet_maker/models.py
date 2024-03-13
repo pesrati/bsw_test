@@ -9,6 +9,6 @@ class Bets(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     event_id = Column(Integer, ForeignKey("events.id"))
-    amount = Column(Numeric(10, 2), CheckConstraint("stake>0"), nullable=False)
+    amount = Column(Numeric(10, 2), CheckConstraint("amount>0"), nullable=False)
 
     event = relationship("Events", backref="bets")
