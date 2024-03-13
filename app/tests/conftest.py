@@ -1,17 +1,16 @@
+import json
+
 import httpx
 import pytest
 from httpx import AsyncClient
 from sqlalchemy import insert
+
 from app.bet_maker.models import Bets
+from app.bet_maker.router import app as app_bet
 from app.config import settings
 from app.database import Base, async_session_maker, engine
-import json
-from app.line_provider.router import app as app_line
-from app.bet_maker.router import app as app_bet
-
 from app.line_provider.models import Events
-
-
+from app.line_provider.router import app as app_line
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -25,8 +24,8 @@ async def prepare_database():
     def open_mock_json(model: str):
         with open(f"app/tests/mock_{model}.json", "r") as file:
             return json.load(file)
-        
-    bets = open_mock_json("bets")   
+
+    bets = open_mock_json("bets")
     events = open_mock_json("events")
 
     async with async_session_maker() as session:
@@ -51,10 +50,10 @@ async def ac_line():
     ) as ac:
         yield ac
 
+
 @pytest.fixture(scope="session")
 async def ac_bet():
     async with AsyncClient(
-        transport = httpx.ASGITransport(app=app_bet), base_url="http://test"
+        transport=httpx.ASGITransport(app=app_bet), base_url="http://test"
     ) as ac:
         yield ac
-    

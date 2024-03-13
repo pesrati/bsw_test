@@ -1,7 +1,7 @@
 import time
 
 import uvicorn
-from fastapi import FastAPI, HTTPException,  status
+from fastapi import FastAPI, HTTPException, status
 
 from app.line_provider.dao import EventsDAO
 from app.line_provider.schemas import SEvent
@@ -83,7 +83,7 @@ async def update_event(id: int, state: str) -> dict:
         HTTPException: If the event with the specified ID is not found.
     """
     existing_event = await EventsDAO.find_one_or_none(id=id)
-    if  existing_event is None:
+    if existing_event is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
         )

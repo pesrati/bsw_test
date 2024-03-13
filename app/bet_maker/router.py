@@ -8,7 +8,9 @@ from app.bet_maker.dao import BetsDAO
 from app.bet_maker.schemas import SBets
 from app.line_provider.dao import EventsDAO
 
-app = FastAPI(title="Bet Maker Service", version="1.0", description="This is a bet maker service")
+app = FastAPI(
+    title="Bet Maker Service", version="1.0", description="This is a bet maker service"
+)
 
 
 @app.get("/actual_events")
@@ -27,7 +29,7 @@ async def get_actual_events() -> list:
             detail="Failed to get events from line_provider service",
         )
     data = response.json()
-    print(data,time.time())
+    print(data, time.time())
     events = (x for x in data if x["deadline"] > time.time())
     return events
 
